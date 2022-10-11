@@ -57,7 +57,7 @@ var optionsEl = document.createElement("ul");
 var timeEl = document.querySelector("#currentTime");
 var timer = 60;
 
-function clearContent() {
+function clear() {
     cardEl.innerHTML = "";
     optionsEl.innerHTML = "";
 }
@@ -65,7 +65,7 @@ function clearContent() {
 function renderQuestions(questionIndex) {
     if(questionIndex <=4) {
 
-        clearContent();
+        clear();
 
         var questionEl = document.createElement("h1");
         questionEl.setAttribute("class", "title is-size-2");
@@ -85,18 +85,68 @@ function renderQuestions(questionIndex) {
                     renderQuestions(questionIndex + 1);
                 }
                 else {
+                    timer = timer - 10;
+
                     renderQuestions(questionIndex + 1);
                 }
             })
         }
+    } else {
+        finish();
     }
 }
 
+function timeStart () {
+    setInterval(function() {
+        timer--;
 
+        timeEl.textContent = "Time:" + timer;
+        if (timer <= 0) {
+            endGame();
+        }
+    } ,1000)
+}
 
+function finish() {
+
+    clear();
+
+    var finishEl = document.createElement("h1");
+    finishEl.setAttribute("class","title is-size-2");
+    finishEl.textContent = "All Done!";
+    cardEl.appendChild(finishEl);
+
+    var finalScore = document.createElement("p");
+    finalScore.setAttribute("class","subtitle is-size-3");
+    cardEl.appendChild(finalScore);
+
+    var score = timer;
+    timeEl.remove();
+    if(timer >= 0) {
+        finalScore.textContent = "Your score is: " + score;
+    }
+    else {
+        finalScore.textContent = "Out of time! Try again"
+    }
+
+    var writeInitials = document.createElement("input");
+    writeInitials.setAttribute("class","input");
+    writeInitials.setAttribute("id","userInput");
+    writeInitials.setAttribute("type","text");
+    writeInitials.setAttribute("name","initials")
+    writeInitials.setAttribute("placeholder", "Insert initials to save Highscore");
+    cardEl.appendChild(writeInitials);
+    var submitButton = document.createElement("button");
+    submitButton.setAttribute("class","button info");
+    submitButton.setAttribute("onclick","save_data");
+    submitButton.textContent = "Submit";
+    cardEl.appendChild(submitButton);  
+}
 
 
 startButtonEl.addEventListener("click", function() {
+    timeStart();
+    
     renderQuestions(0);
 })
 
