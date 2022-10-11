@@ -143,7 +143,6 @@ function finish() {
     cardEl.appendChild(submitButton);  
 }
 
-
 startButtonEl.addEventListener("click", function() {
     timeStart();
     
